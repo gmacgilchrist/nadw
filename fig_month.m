@@ -54,9 +54,9 @@ end
 close all
 % Figure properties
 lmap = 0.1; bmap = 0.5; wmap = 0.5; hmap = 0.4;
-gapv = 0.03;
+gapv = 0.06;
 hhist = 0.1; lhist = lmap;  bhist = bmap-gapv-hhist; whist = wmap;
-hcbar = 0.01; lcbar = lmap; bcbar = bhist-gapv/2-hcbar; wcbar = wmap;
+hcbar = 0.01; lcbar = lmap; bcbar = bhist-gapv/4-hcbar; wcbar = wmap;
 posmap = [lmap bmap wmap hmap];
 poshist = [lhist bhist whist hhist];
 poscbar = [lcbar bcbar wcbar hcbar];
@@ -85,7 +85,7 @@ framem('FlineWidth',2,'FEdgeColor','black');
 geoshow('landareas.shp','facecolor',landcolor,'edgecolor','none');
 colormap(cm); caxis(clims);
 
-title('(a) Month of subduction in NADW (depth-median)','fontsize',titlefs)
+title('(a) Month of subduction in NADW (depth-median)','fontweight','normal','interpreter','none','fontsize',titlefs)
 
 % Histogram
 % Lagrangian
@@ -97,6 +97,8 @@ for mt = 1:length(Dsum);
     hold on
 end
 set(gca,'xticklabels',[]);
+box(gca,'off')
+xlim([0 12])
 ylabel('Volume ($10^{15}\, m^3$)');
 % Eulerian
 ax_eul = axes('position',poshist);
@@ -111,10 +113,12 @@ ax_eul = axes('position',poshist);
 %    hold on
 %end
 edges_eul = D_eul.edges;
-plot(centre(edges_eul),smooth(Dsum_eul/sum(Dsum_eul)),'k--');
-set(ax_eul,'color','none','yaxislocation','right','xticklabels',[])
-ylabel('Fraction')
-title('(b) Volume of NADW subducted in each month','fontsize',titlefs)
+plot(centre(edges_eul),smooth(Dsum_eul/sum(Dsum_eul)),'linestyle','--','color','r');
+set(ax_eul,'color','none','ycolor','r','yaxislocation','right','xticklabels',[])
+box(ax_eul,'off')
+xlim([0 1])
+ylabel('Fraction','interpreter','none')
+title({'(b) Volume of NADW subducted in each month','and \color{red}month of deepest mixed layers'},'fontsize',titlefs,'fontweight','normal','interpreter','tex')
 
 % Colour bar
 yc = 0.5:12.5;
@@ -124,7 +128,7 @@ ax = axes('position',poscbar);
 contourf(yc,xc,zc',yc,'linestyle','none'); caxis(clims); colormap(ax,cbrewer('qual','Paired',12));
 set(gca,'ytick',[],'xtick',1:12,'ticklength',[0 0],...
     'xticklabels',{'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'});
-xlabel('Month of subduction')
+xlabel('Month of subduction','interpreter','none')
 
 if strcmp(savefigs,'y')
    % export_fig([savedir 'fig_month'],'-png',saveres);
